@@ -1,0 +1,17 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: drawRoundBox",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawRoundBox", "posX": 30, "posY": 30, "radius": 20, "height": 40, "width":200, "color":"#888888","filled":true},
+              {"cmd": "drawRoundBox", "posX": 30, "posY": 80, "radius": 10, "height": 40, "width":200, "color":"${red}","filled":"false"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /drawBox.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

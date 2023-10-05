@@ -1,0 +1,46 @@
+{ "ots":1, "displays":
+    [
+        { "type":"init",
+          "script":[
+            {"interval":"midnight"},
+            {"cmd": "varSetTimeNow", "resultkey":"time"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"day", "value": "%e"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"weekdayno", "value": "%w"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"month", "value": "%m"},
+            {"wd0":"Sunday", "wd1":"Monday", "wd2":"Tuesday", "wd3":"Wednesday", "wd4":"Thursday", "wd5":"Friday", "wd6":"Saturday"},
+            {"de.wd0":"Sonntag", "de.wd1":"Montag", "de.wd2":"Dienstag", "de.wd3":"Mittwoch", "de.wd4":"Donnerstag", "de.wd5":"Freitag", "de.wd6":"Samstag"},
+            {"nl.wd0":"zondag", "nl.wd1":"maandag", "nl.wd2":"dinsdag", "nl.wd3":"woensdag", "nl.wd4":"donderdag", "nl.wd5":"vrijdag", "nl.wd6":"zaterdag"},
+            {"m01":"January", "m02":"February", "m03":"March", "m04":"April", "m05":"May", "m06":"June", "m07":"July", "m08":"August", "m09":"September", "m10":"October", "m11":"November", "m12":"December"},
+            {"de.m01":"Januar", "de.m02":"Februar", "de.m03":"März", "de.m04":"April", "de.m05":"Mai", "de.m06":"Juni", "de.m07":"Juli", "de.m08":"August", "de.m09":"September", "de.m10":"Oktober", "de.m11":"November", "de.m12":"Dezember"},
+            {"nl.m01":"januari", "nl.m02":"februari", "nl.m03":"maart", "nl.m04":"april", "nl.m05":"mei", "nl.m06":"juni", "nl.m07":"juli", "nl.m08":"augustus", "nl.m09":"september", "nl.m10":"oktober", "nl.m11":"november", "nl.m12":"december"}
+          ]
+        },
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+            {"cmd": "drawString", "value": "${wd${weekdayno}}",  "posX": 76, "posY": 10, "font":"/fonts/calibrib30", "align":"center"},
+            {"cmd": "drawString", "value": "${day}",      "posX": 76, "posY": 52, "font":"/fonts/calibrib60", "color":"${red}", "align":"center"},
+            {"cmd": "drawString", "value": "${m${month}}", "posX": 76, "posY": 120, "font":"/fonts/calibrib30", "align":"center", "color":"${black}"}
+          ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+                  {"cmd": "drawString", "value": "${wd${weekdayno}}", "posX": 148, "posY": 10, "font":"/fonts/calibrib60", "color":"${red}", "align":"center"},
+                  {"cmd": "drawString", "value": "${day} ${m${month}}", "posX": 148, "posY": 73, "font":"/fonts/calibrib50", "color":"${black}", "align":"center"}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[
+                  {"cmd": "drawString", "value": "${wd${weekdayno}}", "posX": 148, "posY": 10, "font":"/fonts/calibrib60", "color":"${red}", "align":"center"},
+                  {"cmd": "drawString", "value": "${day} ${m${month}}", "posX": 148, "posY": 73, "font":"/fonts/calibrib50", "color":"${black}", "align":"center"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"},
+            {"cmd": "drawString", "value": "${timestr}", "posX": 5, "posY": 108, "color":"${black}"}
+          ]
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+              {"cmd": "drawString", "value": "Test: \fileDelete",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawString", "value": "Es sollte eine \nDatei LICENSE \nnun gespeichert \nsein",  "posX": 1, "posY": 50},
+              {"cmd": "drawString", "value": "Die Dateien /LICENSE \nund /LICENSE.txt \nwerden gelöscht",  "posX": 1, "posY": 50},
+              {"cmd": "fileDelete", "filename":"/LICENSE"},
+              {"cmd": "fileDelete", "filename":"/LICENSE.txt"}
+            ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: fileDelete",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawString", "value": "Die Dateien /LICENSE und \n/LICENSE.txt werden \ngelöscht",  "posX": 1, "posY": 30},
+              {"cmd": "fileDelete", "filename":"/LICENSE"},
+              {"cmd": "fileDelete", "filename":"/LICENSE.txt"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "fileRename", "value": "No matching\n displayType\n in the fileDelete.json.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

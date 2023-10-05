@@ -1,0 +1,22 @@
+{
+	"ST_GR1600":	0,
+	"ST_GR2900":	1,
+	"ST_GR420B3N2":	2, 
+	"ST_GR750BN":	5, 
+	"ST_GR2900L": 	17, 
+	"EL029GSWRN": 	51, 
+	"TFT320x170": 	224, 
+	"SLT_EM007":	240, 
+	"align":"left", 
+	"DefaultFontSize":20, 
+	"DefaultFont":"/fonts/calibrib30", 
+	"red":"#ff0000", 
+	"black":"#000000", 
+	"white":"#ffffff",
+	"fontSize":"${DefaultFontSize}",
+	"font":"${DefaultFont}",
+	"color":"${black}",
+	"bgColor":"${white}",
+	"posX":"${MarginLeft}",
+	"posY":"${MarginTop}"
+}

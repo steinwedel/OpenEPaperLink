@@ -1,0 +1,45 @@
+{ "ots":1, "displays":
+    [
+      { "type":"init",
+        "script":[
+          {"interval":15},
+          {"cmd": "varSetGeoLocation"},
+          {"cmd": "varSetWeather"}
+        ]
+        },
+        { "type":"0",
+          "script":[
+                {"cmd": "drawString", "value": "${weatherIconCur}", "posX": 75, "posY": 26, "font": "/fonts/weathericons.ttf", "size":"70", "color":"${black}","bgColor":"${white}", "align":"center"},
+                {"cmd": "drawString", "value": "${temperatureCur}°C", "posX": 10, "posY": 10, "color":"${black}", "font":"/fonts/bahnschrift30", "align":"left"},
+                {"cmd": "drawString", "value": "${windSpeedCur}", "posX": 135, "posY": 10, "color":"${black}", "font":"/fonts/bahnschrift20", "align":"right"},
+                {"cmd": "drawString", "value": "km/h", "posX": 145, "posY": 35, "color":"${black}", "font":"t0_14b_tf", "align":"right"},
+                {"cmd": "drawString", "value": "${windDirSignCur}", "posX": 140,  "posY": -12, "font": "/fonts/weathericons.ttf", "size":"40","align":"left"},
+                {"cmd": "drawString", "value": "${location}",   "posX": 76, "posY": 125, "font":"/fonts/bahnschrift20", "color":"${black}", "align":"center"}
+          ]
+        },
+        { "type":"1",
+            "script":[      
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift30", "color":"${black}"},
+                {"cmd": "drawString", "value": "${weatherIconCur}", "posX": 200, "posY": 35, "font": "/fonts/weathericons.ttf", "size":"60", "color":"${black}","bgColor":"${white}"},
+                {"cmd": "drawString", "value": "${temperatureCur}", "posX": 5, "posY": 65, "color":"${black}", "font":"/fonts/bahnschrift70"},
+                {"cmd": "drawString", "value": "${windSpeedCur} km/h", "posX": 260, "posY": 5, "color":"${black}", "font":"/fonts/bahnschrift30", "align":"right"},
+                {"cmd": "drawString", "value": "${windDirSignCur}", "posX": 275,  "posY": -12, "font": "/fonts/weathericons.ttf", "size":"40","align":"left"}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[      
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift30", "color":"${black}"},
+                {"cmd": "drawString", "value": "${weatherIconCur}", "posX": 200, "posY": 35, "font": "/fonts/weathericons.ttf", "size":"60", "color":"${black}","bgColor":"${white}"},
+                {"cmd": "drawString", "value": "${temperatureCur}", "posX": 5, "posY": 65, "color":"${black}", "font":"/fonts/bahnschrift70"},
+                {"cmd": "drawString", "value": "${windSpeedCur} km/h", "posX": 260, "posY": 5, "color":"${black}", "font":"/fonts/bahnschrift30", "align":"right"},
+                {"cmd": "drawString", "value": "${windDirSignCur}", "posX": 275,  "posY": -12, "font": "/fonts/weathericons.ttf", "size":"40","align":"left"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

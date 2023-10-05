@@ -1,0 +1,27 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+                  {"cmd": "drawString", "value": "Test: drawString",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawString", "value": "bahnschrift20",  "posX": 1, "posY": 25,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawString", "value": "calibrib30 - red",  "posX": 1, "posY": 45,  "font":"/fonts/calibrib30", "align":"left", "color":"${red}"},
+                  {"cmd": "drawString", "value": "calibrib60",  "posX": 1, "posY": 80,  "font":"/fonts/calibrib60", "align":"left", "color":"${black}"}
+          ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+                  {"cmd": "drawString", "value": "Test: drawString",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawString", "value": "bahnschrift20",  "posX": 1, "posY": 25,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawString", "value": "calibrib30 - red",  "posX": 1, "posY": 45,  "font":"/fonts/calibrib30", "align":"left", "color":"${red}"},
+                  {"cmd": "drawString", "value": "calibrib60",  "posX": 1, "posY": 80,  "font":"/fonts/calibrib60", "align":"left", "color":"${black}"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /drawString.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

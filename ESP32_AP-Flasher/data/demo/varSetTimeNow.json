@@ -1,0 +1,25 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+              {"cmd": "drawString", "value": "Test: varSetTimeNow",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "varSetTimeNow","resultkey":"time"},
+              {"cmd": "drawString", "value":"Timestamp: \n${time}", "posX": 1, "posY": 20}
+            ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: varSetTimeNow",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "varSetTimeNow","resultkey":"time"},
+              {"cmd": "drawString", "value":"Timestamp: ${time}", "posX": 1, "posY": 20}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

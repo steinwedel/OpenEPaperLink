@@ -1,0 +1,37 @@
+{ "ots":1, "displays":
+    [
+        { "type":"init",
+          "script":[
+            {"interval":"60"},
+            {"cmd":"mathIsGreater", "resultKey":"counterColor","var1":"${counter}", "var2":"${thresholdred}", "resultTrue":"${red}", "resultFalse":"${black}"}
+          ]
+        },
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+            {"cmd": "drawString", "value": "Hour",  "posX": 76, "posY": 10, "font":"/fonts/calibrib30", "align":"center"},
+            {"cmd": "drawString", "value": "Counter",  "posX": 76, "posY": 40, "font":"/fonts/calibrib30", "align":"center"},
+            {"cmd": "drawString", "value": "${counter}", "posX": 76, "posY": 80, "font":"/fonts/calibrib60", "align":"center", "color":"${counterColor}"}
+          ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+                  {"cmd": "drawString", "value": "Hour Counter", "posX": 148, "posY": 10, "font":"/fonts/calibrib30", "color":"${black}", "align":"center"},
+                  {"cmd": "drawString", "value": "${counter}", "posX": 148, "posY": 53, "font":"/fonts/calibrib50", "color":"${counterColor}", "align":"center"}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[
+                  {"cmd": "drawString", "value": "Hour Counter", "posX": 160, "posY": 30, "font":"/fonts/calibrib30", "color":"${black}", "align":"center"},
+                  {"cmd": "drawString", "value": "${counter}", "posX": 160, "posY": 73, "font":"/fonts/calibrib50", "color":"${counterColor}", "align":"center"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /templates/hourcounter.json\n script", "posX": 5, "posY": 25, "color":"${black}"},
+            {"cmd": "drawString", "value": "${timestr}", "posX": 5, "posY": 108, "color":"${black}"}
+          ]
+        }
+    ]
+}

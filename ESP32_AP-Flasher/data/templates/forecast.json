@@ -1,0 +1,68 @@
+{ "ots":1, "displays":
+    [
+      { "type":"init",
+        "script":[
+          {"interval":15},
+          {"cmd": "varSetGeoLocation"},
+          {"cmd": "log","text":"LAT: ${lat}"},
+          {"cmd": "varSetWeather"},
+          {"cmd": "varSetTimeNow", "resultkey": "now"},
+          {"cmd": "varSetTimeString", "key":"now", "resultkey":"dayno", "value":"%u"},
+          {"wd0":"Su", "wd1":"Mo","wd2":"Tu","wd3":"We","wd4":"Th","wd5":"Fr","wd6":"Sa"},
+          {"nl.wd0":"ZO", "nl.wd1":"MA","nl.wd2":"DI","nl.wd3":"WO","nl.wd4":"DO","nl.wd5":"VR","nl.wd6":"ZA"},
+          {"de.wd0":"So", "de.wd1":"Mo","de.wd2":"Di","de.wd3":"Mi","de.wd4":"Do","de.wd5":"Fr","de.wd6":"Sa"}
+        ]
+      },
+      { "type":"1",
+        "script":[      
+          {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift30", "color":"${black}"},
+          {"cmd": "drawLine", "posX": 59, "posY": 35, "posToX": 59, "posToY": 128},
+          {"cmd": "drawLine", "posX": 118, "posY": 35, "posToX": 118, "posToY": 128},
+          {"cmd": "drawLine", "posX": 177, "posY": 35, "posToX": 177, "posToY": 128},
+          {"cmd": "drawLine", "posX": 236, "posY": 35, "posToX": 236, "posToY": 128},
+              
+          {"cmd":"for","from":0,"to":4, "step":1, "indexKey":"index","name":"drawDayX"}
+          ]
+        },
+        
+        { "type":"${TFT320x170}",
+            "script":[
+              {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift30", "color":"${black}"},
+              {"cmd": "drawLine", "posX": 59, "posY": 35, "posToX": 59, "posToY": 128},
+              {"cmd": "drawLine", "posX": 118, "posY": 35, "posToX": 118, "posToY": 128},
+              {"cmd": "drawLine", "posX": 177, "posY": 35, "posToX": 177, "posToY": 128},
+              {"cmd": "drawLine", "posX": 236, "posY": 35, "posToX": 236, "posToY": 128},
+              
+              {"cmd":"for","from":0,"to":4, "step":1, "indexKey":"index","name":"drawDayX"}
+            ]
+        },
+
+        
+        {
+          "type":"drawDayX",
+          "script":[
+            {"cmd": "mathModulo", "var1":"${dayno}","var2":7, "resultKey":"dayno"},
+            {"wd":"${wd${dayno}}"},
+            {"cmd": "*", "var1":"${index}","var2":59, "resultKey":"x"},
+            {"cmd": "+", "var1":"${x}","var2":29, "resultKey":"xC"},
+            {"cmd": "+", "var1":"${x}","var2":5, "resultKey":"xL"},
+            {"cmd": "+", "var1":"${x}","var2":54, "resultKey":"xR"},
+            {"cmd":"mathIsEqual", "var1":"${dayno}", "var2":0, "resultKey":"wdcolor", "resultTrue":"${red}", "resultFalse":"${black}"},
+            {"cmd": "drawString", "value": "${wd}",  "posX": "${xC}", "posY": 35,  "font":"/fonts/bahnschrift20", "align":"center", "color":"${wdcolor}"},
+            {"cmd": "drawString", "value": "${windDirSign${index}}", "posX": "${xL}", "posY": 40, "font":"/fonts/weathericons.ttf", "size":"30", "align":"left", "color":"${black}"},
+            {"cmd": "drawString", "value": "${windSpeed${index}}", "posX": "${xR}", "posY":55, "font":"/fonts/bahnschrift20", "size":"20", "align":"right"},
+            {"cmd": "drawString", "value": "${weatherIcon${index}}", "posX": "${xC}", "posY": 75, "font": "/fonts/weathericons.ttf", "size":"20", "align":"center"},
+            {"cmd": "drawString", "value": "${temperatureMin${index}}", "posX": "${xL}", "posY": 110, "font":"/fonts/bahnschrift20", "size":"20", "align":"left"},
+            {"cmd": "drawString", "value": "${temperatureMax${index}}", "posX": "${xR}", "posY":110, "font":"/fonts/bahnschrift20", "size":"20", "align":"right"},
+            {"cmd": "+", "var1":"${dayno}","var2":1, "resultKey":"dayno"}
+          ]
+        },
+        
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

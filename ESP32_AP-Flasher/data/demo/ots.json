@@ -1,0 +1,99 @@
+{ "ots":1, "displays":
+    [
+      { "type":"init",
+        "script":[
+          {"interval":3},
+          {"cmd": "fileCopy", "target":"/fonts/ibm-medium.ttf", "source":"https://github.com/IBM/plex/raw/master/IBM-Plex-Sans/fonts/complete/ttf/IBMPlexSans-Medium.ttf", "overwrite":"false"},
+          {"cmd": "varSetGeoLocation", "location":"Garbsen"},
+          {"cmd": "varSetWeather"},
+          {"cmd": "varSetTimeNow", "resultkey":"time"},
+          {"cmd": "varSetTimeString", "key":"time",     "resultkey":"timestr",   "value": "%H:%M"},
+          {"cmd": "varSetTimeString", "key":"sunrise0", "resultkey":"aufgang",   "value": "%H:%M"},
+          {"cmd": "varSetTimeString", "key":"sunset0",  "resultkey":"untergang", "value": "%H:%M"}
+        ]
+        },
+        { "type":"0",
+          "script":[
+            {"cmd": "drawString", "value": "TestX\n${time}", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawQR", "value":"2. Test Gerhard Steinwedel", "posX": 152, "posY": 152, "size":3, "align":"bottomRight", "color": "${black}"}
+          ]
+        },
+        { "type":"1",
+            "script":[                
+                {"cmd": "drawString", "value": "${timestr}", "posX": 150, "posY": 78,"font": "/fonts/bahnschrift20", "color":"${red}", "bgColor":"${red}"},
+                
+                {"cmd": "drawBox", "posX": 0, "posY": 0, "width":296, "height":22,"color":"${red}"},
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${white}"},
+                {"cmd": "drawString", "value": "\uf046", "posX": 150, "posY": 4,    "font": "/fonts/weathericons.ttf", "size":"15"},
+                {"cmd": "drawString", "value": "\uf047", "posX": 227, "posY": 4,    "font": "/fonts/weathericons.ttf", "size":"15"},
+                {"cmd": "drawString", "value": "${aufgang}      ${untergang}", "posX": 170, "posY": 5, "font": "/fonts/bahnschrift20"},
+                
+                {"cmd": "drawLine", "posX":200, "posY":22, "posToX":200, "posToY":140, "color":"${black}"},
+                {"cmd": "drawLine", "posX":200, "posY":57, "posToX":296, "posToY":57, "color":"${black}"},
+                {"cmd": "drawLine", "posX":0, "posY":93, "posToX":296, "posToY":93, "color":"${black}"},
+                
+                {"cmd": "drawString", "value": "${weatherIconCur}", "posX": 130, "posY": 20, "font": "/fonts/weathericons.ttf", "size":"45", "color":"${black}","bgColor":"${white}"},
+                {"cmd": "drawString", "value": "${temperatureCur}°C", "posX": 5, "posY": 32, "color":"${black}", "font":"/fonts/calibrib30"},
+                {"cmd": "drawString", "value": "${windSpeedCur} km/h", "posX": 5, "posY": 65, "color":"${black}", "font":"/fonts/bahnschrift20"},
+                {"cmd": "drawString", "value": "${windDirSignCur}", "posX": 80,  "posY": 51, "font": "/fonts/weathericons.ttf", "size":"30"},
+
+                {"cmd": "drawString", "value": "${temperatureMin0}/${temperatureMax0}°C", "posX": 5, "posY": 94,  "font": "/fonts/ibm-medium.ttf", "size":16, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum0}mm (${precipitationProbabilityMax0}%, ${precipitationHours0}h)", "posX": 5, "posY": 109, "color":"${black}"},
+
+                {"cmd": "drawString", "value": "${weatherIcon1}", "posX": 275, "posY": 20, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin1}/${temperatureMax1}°C", "posX": 210, "posY": 23, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum1}mm", "posX": 210, "posY": 39},
+
+                {"cmd": "drawString", "value": "${weatherIcon2}", "posX": 275, "posY": 55, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin2}/${temperatureMax2}°C", "posX": 210, "posY": 58, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum2}mm", "posX": 210, "posY": 75},
+
+                {"cmd": "drawString", "value": "${weatherIcon3}", "posX": 275, "posY": 90, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin3}/${temperatureMax3}°C", "posX": 210, "posY": 96, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum3}mm", "posX": 210, "posY": 111}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[                
+                {"cmd": "drawString", "value": "${timestr}", "posX": 150, "posY": 78,"font": "/fonts/bahnschrift20", "color":"${red}", "bgColor":"${red}"},
+                
+                {"cmd": "drawBox", "posX": 0, "posY": 0, "width":296, "height":22,"color":"${red}"},
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${white}"},
+                {"cmd": "drawString", "value": "\uf046", "posX": 150, "posY": 4,    "font": "/fonts/weathericons.ttf", "size":"15"},
+                {"cmd": "drawString", "value": "\uf047", "posX": 227, "posY": 4,    "font": "/fonts/weathericons.ttf", "size":"15"},
+                {"cmd": "drawString", "value": "${aufgang}      ${untergang}", "posX": 170, "posY": 5, "font": "/fonts/bahnschrift20"},
+                
+                {"cmd": "drawLine", "posX":200, "posY":22, "posToX":200, "posToY":140, "color":"${black}"},
+                {"cmd": "drawLine", "posX":200, "posY":57, "posToX":296, "posToY":57, "color":"${black}"},
+                {"cmd": "drawLine", "posX":0, "posY":93, "posToX":296, "posToY":93, "color":"${black}"},
+                
+                {"cmd": "drawString", "value": "${weatherIconCur}", "posX": 130, "posY": 20, "font": "/fonts/weathericons.ttf", "size":"45", "color":"${black}","bgColor":"${white}"},
+                {"cmd": "drawString", "value": "${temperatureCur}°C", "posX": 5, "posY": 32, "color":"${black}", "font":"/fonts/calibrib30"},
+                {"cmd": "drawString", "value": "${windSpeedCur} km/h", "posX": 5, "posY": 65, "color":"${black}", "font":"/fonts/bahnschrift20"},
+                {"cmd": "drawString", "value": "${windDirSignCur}", "posX": 80,  "posY": 51, "font": "/fonts/weathericons.ttf", "size":"30"},
+
+                {"cmd": "drawString", "value": "${temperatureMin0}/${temperatureMax0}°C", "posX": 5, "posY": 94,  "font": "/fonts/ibm-medium.ttf", "size":16, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum0}mm (${precipitationProbabilityMax0}%, ${precipitationHours0}h)", "posX": 5, "posY": 109, "color":"${black}"},
+
+                {"cmd": "drawString", "value": "${weatherIcon1}", "posX": 275, "posY": 20, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin1}/${temperatureMax1}°C", "posX": 210, "posY": 23, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum1}mm", "posX": 210, "posY": 39},
+
+                {"cmd": "drawString", "value": "${weatherIcon2}", "posX": 275, "posY": 55, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin2}/${temperatureMax2}°C", "posX": 210, "posY": 58, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum2}mm", "posX": 210, "posY": 75},
+
+                {"cmd": "drawString", "value": "${weatherIcon3}", "posX": 275, "posY": 90, "font": "/fonts/weathericons.ttf", "size":"20"},
+                {"cmd": "drawString", "value": "${temperatureMin3}/${temperatureMax3}°C", "posX": 210, "posY": 96, "font": "/fonts/ibm-medium.ttf", "size":14, "color":"${black}"},
+                {"cmd": "drawString", "value": "${precipitationSum3}mm", "posX": 210, "posY": 111}
+            ]
+        },        
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"},
+            {"cmd": "drawString", "value": "${time}", "posX": 5, "posY": 108, "color":"${black}"}
+          ]
+        }
+    ]
+}

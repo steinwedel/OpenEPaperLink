@@ -1,0 +1,29 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+              {"cmd": "drawString", "value": "Test: drawQR",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawQR", "posX": 50, "posY": 100, "value": "Test!", "size":2}
+            ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: drawQR",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawQR", "posX": 100, "posY": 50, "value": "Test!", "size":2}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: drawQR",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawQR", "posX": 160, "posY": 50, "value": "Test!", "size":2}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.drawQR\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

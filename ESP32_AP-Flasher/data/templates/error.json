@@ -1,0 +1,14 @@
+{ "ots":1, "displays":
+    [
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "varSetTimeNow", "resultkey":"time"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"timestr", "value": "%H:%M"},
+
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the ots-script", "posX": 5, "posY": 25, "color":"${black}"},
+            {"cmd": "drawString", "value": "${timestr}", "posX": 5, "posY": 108, "color":"${black}"}
+          ]
+        }
+    ]
+}

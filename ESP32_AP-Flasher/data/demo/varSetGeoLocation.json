@@ -1,0 +1,27 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+              {"city":"Berlin"},
+              {"cmd": "drawString", "value": "Test: varSetGeoLocation",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "varSetGeoLocation", "location":"${city}"},
+              {"cmd": "drawString", "value": "location:${city}\nlon:${lon}\nlat:${lat}\ntz:${tz}",  "posX": 1, "posY": 20}
+          ]  
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"city":"Berlin"},
+              {"cmd": "drawString", "value": "Test: varSetGeoLocation",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "varSetGeoLocation", "location":"${city}"},
+              {"cmd": "drawString", "value": "location:${city}\nlon:${lon}\nlat:${lat}\ntz:${tz}",  "posX": 1, "posY": 20}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

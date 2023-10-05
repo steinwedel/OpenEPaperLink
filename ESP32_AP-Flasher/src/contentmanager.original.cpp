@@ -28,12 +28,11 @@
 #endif
 #include "language.h"
 #include "settings.h"
+#include "system.h"
 #include "tag_db.h"
 #include "truetype.h"
 #include "util.h"
 #include "web.h"
-#include "ots/otsScript.h"
-#include "ots/otsDebug.h"
 
 // https://csvjson.com/json_beautifier
 
@@ -79,7 +78,6 @@ void contentRunner() {
 }
 
 void checkVars() {
-#ifndef OTS
     DynamicJsonDocument cfgobj(500);
     for (tagRecord *tag : tagDB) {
         if (tag->contentMode == 19) {
@@ -113,10 +111,8 @@ void checkVars() {
     for (const auto &entry : varDB) {
         if (entry.second.changed) varDB[entry.first].changed = false;
     }
-#endif
 }
 
-#ifndef OTS
 /// @brief Draw a counter
 /// @param mac Destination mac
 /// @param buttonPressed Was the button pressed (true) or not (false)
@@ -136,10 +132,8 @@ void drawCounter(const uint8_t mac[8], const bool buttonPressed, tagRecord *&tag
     updateTagImage(filename, mac, (buttonPressed ? 0 : nextCheckin), taginfo, imageParams);
     cfgobj["counter"] = counter + 1;
 }
-#endif
 
 void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo) {
-    otsDEBUG("DrawNew: Start");
     time_t now;
     time(&now);
 
@@ -184,12 +178,6 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
     }
 #endif
 
-    struct tm time_info;
-    getLocalTime(&time_info);
-    time_info.tm_hour = time_info.tm_min = time_info.tm_sec = 0;
-    time_info.tm_mday++;
-    const time_t midnight = mktime(&time_info);
-
     DynamicJsonDocument doc(500);
     deserializeJson(doc, taginfo->modeConfigJson);
     JsonObject cfgobj = doc.as<JsonObject>();
@@ -199,7 +187,6 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
     taginfo->nextupdate = now + 60;
 
     imgParam imageParams;
-
     imageParams.width = hwdata.width;
     imageParams.height = hwdata.height;
     imageParams.bpp = hwdata.bpp;
@@ -284,75 +271,38 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         } break;
 
         case 1:  // Today
-#ifndef OTS
+
             drawDate(filename, taginfo, imageParams);
-            taginfo->nextupdate = midnight;
-            updateTagImage(filename, mac, (midnight - now) / 60 - 10, taginfo, imageParams);
-            break;
-#endif
-#ifdef OTS
-            processTemplateFile("file:///templates/date.json", taginfo, imageParams);
-            break;
-#endif
-        case 2:  // CountDays
-        {
-#ifndef OTS
-            drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, midnight, 15);
-            break;
-#endif
-#ifdef OTS
-            int32_t counter = cfgobj["counter"].as<int32_t>();
-            if (buttonPressed) counter = 0;
-            processTemplateFile("file:///templates/countdays.json", taginfo, imageParams);  // midnight
-            cfgobj["counter"] = counter + 1;
+            taginfo->nextupdate = util::getMidnightTime();
+            updateTagImage(filename, mac, (taginfo->nextupdate - now) / 60 - 10, taginfo, imageParams);
             break;
 
-#endif
-        }
+        case 2:  // CountDays
+            drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, util::getMidnightTime(), 15);
+            break;
 
         case 3:  // CountHours
-        {
-#ifndef OTS
             drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, now + 3600, 5);
             break;
-#endif
-#ifdef OTS 
-            int32_t counter = cfgobj["counter"].as<int32_t>();
-            if (buttonPressed) counter = 0;
-            processTemplateFile("file:///templates/counthours.json", taginfo, imageParams);  // all 60 minutes
-            cfgobj["counter"] = counter + 1;
-            break;
-#endif
-        }
 
         case 4:  // Weather
+
             // https://open-meteo.com/
             // https://geocoding-api.open-meteo.com/v1/search?name=eindhoven
             // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true
             // https://github.com/erikflowers/weather-icons
 
-#ifndef OTS
             drawWeather(filename, cfgobj, taginfo, imageParams);
             taginfo->nextupdate = now + 1800;
             updateTagImage(filename, mac, 15, taginfo, imageParams);
             break;
-#endif
-#ifdef OTS
-            processTemplateFile("file:///templates/weather.json", taginfo, imageParams);  // all 60 minutes
-            break;
-#endif
 
         case 8:  // Forecast
-#ifndef OTS
+
             drawForecast(filename, cfgobj, taginfo, imageParams);
             taginfo->nextupdate = now + 3600;
             updateTagImage(filename, mac, 15, taginfo, imageParams);
             break;
-#endif
-#ifdef OTS
-            processTemplateFile("file:///templates/forecast.json", taginfo, imageParams);  // all 60 minutes
-            break;
-#endif
 
         case 5:  // Firmware
 
@@ -389,7 +339,7 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         }
 
         case 9:  // RSSFeed
-#ifndef OTS
+
             if (getRssFeed(filename, cfgobj["url"], cfgobj["title"], taginfo, imageParams)) {
                 const int interval = cfgobj["interval"].as<int>();
                 taginfo->nextupdate = now + 60 * (interval < 3 ? 60 : interval);
@@ -398,22 +348,16 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
                 taginfo->nextupdate = now + 300;
             }
             break;
-#endif
 
         case 10:  // QRcode:
-#ifndef OTS
+
             drawQR(filename, cfgobj["qr-content"], cfgobj["title"], taginfo, imageParams);
             taginfo->nextupdate = now + 12 * 3600;
             updateTagImage(filename, mac, 0, taginfo, imageParams);
             break;
-#endif
-#ifdef OTS
-            processTemplateFile("file:///templates/qrcode.json", taginfo, imageParams);  // all 60 minutes
-            break;
-#endif
 
         case 11:  // Calendar:
-#ifndef OTS
+
             if (getCalFeed(filename, cfgobj["apps_script_url"], cfgobj["title"], taginfo, imageParams)) {
                 const int interval = cfgobj["interval"].as<int>();
                 taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
@@ -422,7 +366,6 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
                 taginfo->nextupdate = now + 300;
             }
             break;
-#endif
 
         case 12:  // RemoteAP
 
@@ -450,20 +393,14 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
             break;
 
         case 16:  // buienradar
-#ifndef OTS
+
         {
             const uint8_t refresh = drawBuienradar(filename, cfgobj, taginfo, imageParams);
             taginfo->nextupdate = now + refresh * 60;
             updateTagImage(filename, mac, refresh, taginfo, imageParams);
             break;
         }
-#endif
-#ifdef OTS
-            {
-                processTemplateFile("file:///templates/preception.json", taginfo, imageParams);  // all 60 minutes
-                break;
-            }
-#endif
+
         case 17:  // tag command
             sendTagCommand(mac, cfgobj["cmd"].as<int>(), (taginfo->isExternal == false));
             cfgobj["filename"] = "";
@@ -479,8 +416,6 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
             break;
 
         case 19:  // json template
-            otsDEBUG("19: Start");
-#ifndef OTS
         {
             const String configFilename = cfgobj["filename"].as<String>();
             if (!util::isEmptyOrNull(configFilename)) {
@@ -524,31 +459,18 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
             }
             break;
         }
-#endif
-#ifdef OTS
-            processTemplate(cfgobj["url"].as<String>(), taginfo, imageParams);
-            otsDEBUG("19: End");
-            break;
 
-#endif
         case 20:  // display a copy
             break;
 
         case 21:  // ap info
-#ifndef OTS
             drawAPinfo(filename, cfgobj, taginfo, imageParams);
             updateTagImage(filename, mac, 0, taginfo, imageParams);
             taginfo->nextupdate = 3216153600;
             break;
-#endif
-#ifdef OTS
-            processTemplate("file:///templates/apinfo.json", taginfo, imageParams);
-            break;
-#endif
     }
 
     taginfo->modeConfigJson = doc.as<String>();
-    otsDEBUG("DrawNew: End");
 }
 
 bool updateTagImage(String &filename, const uint8_t *dst, uint16_t nextCheckin, tagRecord *&taginfo, imgParam &imageParams) {
@@ -564,7 +486,6 @@ bool updateTagImage(String &filename, const uint8_t *dst, uint16_t nextCheckin, 
     return true;
 }
 
-// #ifndef OTS
 uint8_t processFontPath(String &font) {
     if (font == "") return 3;
     if (font == "glasstown_nbp_tf") return 1;
@@ -581,18 +502,25 @@ void replaceVariables(String &format) {
     size_t startIndex = 0;
     size_t openBraceIndex, closeBraceIndex;
 
+    time_t now;
+    time(&now);
+    struct tm timedef;
+    localtime_r(&now, &timedef);
+    char timeBuffer[80];
+    strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &timedef);
+    setVarDB("ap_time", timeBuffer, false);
+
     while ((openBraceIndex = format.indexOf('{', startIndex)) != -1 &&
            (closeBraceIndex = format.indexOf('}', openBraceIndex + 1)) != -1) {
         const std::string variableName = format.substring(openBraceIndex + 1, closeBraceIndex).c_str();
         const std::string varKey = "{" + variableName + "}";
-        auto var = varDB.find(variableName);
+        const auto var = varDB.find(variableName);
         if (var != varDB.end()) {
             format.replace(varKey.c_str(), var->second.value);
         }
         startIndex = closeBraceIndex + 1;
     }
 }
-// #endif
 
 void drawString(TFT_eSprite &spr, String content, int16_t posx, int16_t posy, String font, byte align, uint16_t color, uint16_t size, uint16_t bgcolor) {
     // drawString(spr,"test",100,10,"bahnschrift30",TC_DATUM,TFT_RED);
@@ -650,7 +578,6 @@ void drawString(TFT_eSprite &spr, String content, int16_t posx, int16_t posy, St
         }
     }
 }
-// #endif
 
 void initSprite(TFT_eSprite &spr, int w, int h, imgParam &imageParams) {
     spr.setColorDepth(8);
@@ -670,7 +597,6 @@ void initSprite(TFT_eSprite &spr, int w, int h, imgParam &imageParams) {
     spr.fillSprite(TFT_WHITE);
 }
 
-#ifndef OTS
 void drawDate(String &filename, tagRecord *&taginfo, imgParam &imageParams) {
     time_t now;
     time(&now);
@@ -939,7 +865,6 @@ void drawForecast(String &filename, JsonObject &cfgobj, const tagRecord *taginfo
     spr2buffer(spr, filename, imageParams);
     spr.deleteSprite();
 }
-#endif
 
 int getImgURL(String &filename, String URL, time_t fetched, imgParam &imageParams, String MAC) {
     // https://images.klari.net/kat-bw29.jpg
@@ -947,6 +872,7 @@ int getImgURL(String &filename, String URL, time_t fetched, imgParam &imageParam
     Storage.begin();
 
     HTTPClient http;
+    logLine("http getImgURL " + URL);
     http.begin(URL);
     http.addHeader("If-Modified-Since", formatHttpDate(fetched));
     http.addHeader("X-ESL-MAC", MAC);
@@ -971,8 +897,6 @@ int getImgURL(String &filename, String URL, time_t fetched, imgParam &imageParam
     http.end();
     return httpCode;
 }
-
-#ifndef OTS
 
 #ifdef CONTENT_RSS
 rssClass reader;
@@ -1054,6 +978,7 @@ bool getCalFeed(String &filename, String URL, String title, tagRecord *&taginfo,
     strftime(dateString, sizeof(dateString), "%d.%m.%Y", &timeinfo);
 
     HTTPClient http;
+    logLine("http getCalFeed " + URL);
     http.begin(URL);
     http.setTimeout(10000);
     http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
@@ -1156,6 +1081,7 @@ uint8_t drawBuienradar(String &filename, JsonObject &cfgobj, tagRecord *&taginfo
 
     String lat = cfgobj["#lat"];
     String lon = cfgobj["#lon"];
+    logLine("http drawBuienradar");
     http.begin("https://gps.buienradar.nl/getrr.php?lat=" + lat + "&lon=" + lon);
     http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
     http.setTimeout(5000);
@@ -1228,7 +1154,6 @@ uint8_t drawBuienradar(String &filename, JsonObject &cfgobj, tagRecord *&taginfo
 #endif
     return refresh;
 }
-#endif
 
 void drawAPinfo(String &filename, JsonObject &cfgobj, tagRecord *&taginfo, imgParam &imageParams) {
     if (taginfo->hwType == SOLUM_SEG_UK) {
@@ -1251,7 +1176,6 @@ void drawAPinfo(String &filename, JsonObject &cfgobj, tagRecord *&taginfo, imgPa
     spr.deleteSprite();
 }
 
-#ifndef OTS
 bool getJsonTemplateFile(String &filename, String jsonfile, tagRecord *&taginfo, imgParam &imageParams) {
     if (jsonfile.c_str()[0] != '/') {
         jsonfile = "/" + jsonfile;
@@ -1419,6 +1343,7 @@ bool getJsonTemplateFileExtractVariables(String &filename, String jsonfile, Json
 int getJsonTemplateUrl(String &filename, String URL, time_t fetched, String MAC, tagRecord *&taginfo, imgParam &imageParams) {
     HTTPClient http;
     http.useHTTP10(true);
+    logLine("http getJsonTemplateUrl " + URL);
     http.begin(URL);
     http.addHeader("If-Modified-Since", formatHttpDate(fetched));
     http.addHeader("X-ESL-MAC", MAC);
@@ -1456,7 +1381,6 @@ void drawJsonStream(Stream &stream, String &filename, tagRecord *&taginfo, imgPa
     spr2buffer(spr, filename, imageParams);
     spr.deleteSprite();
 }
-#endif
 
 void drawElement(const JsonObject &element, TFT_eSprite &spr) {
     if (element.containsKey("text")) {
@@ -1499,7 +1423,7 @@ char *formatHttpDate(const time_t t) {
     strftime(buf, sizeof(buf), "%a, %d %b %Y %H:%M:%S GMT", timeinfo);
     return buf;
 }
-#ifndef OTS
+
 String urlEncode(const char *msg) {
     constexpr const char *hex = "0123456789ABCDEF";
     String encodedMsg = "";
@@ -1557,7 +1481,6 @@ void getLocation(JsonObject &cfgobj) {
         }
     }
 }
-#endif
 
 void prepareNFCReq(const uint8_t *dst, const char *url) {
     uint8_t *data;
@@ -1612,7 +1535,6 @@ void prepareConfigFile(const uint8_t *dst, const JsonObject &config) {
     prepareDataAvail((uint8_t *)&tagSettings, sizeof(tagSettings), 0xA8, dst);
 }
 
-// #ifndef OTS
 void getTemplate(JsonDocument &json, const uint8_t id, const uint8_t hwtype) {
     StaticJsonDocument<80> filter;
     DynamicJsonDocument doc(2048);
@@ -1643,7 +1565,6 @@ void getTemplate(JsonDocument &json, const uint8_t id, const uint8_t hwtype) {
         Serial.println("Failed to open " + String(filename));
     }
 }
-// #endif
 
 void setU8G2Font(const String &title, U8g2_for_TFT_eSPI &u8f) {
     if (title == "glasstown_nbp_tf") {

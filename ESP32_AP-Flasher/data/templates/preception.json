@@ -1,0 +1,63 @@
+{ "ots":1, "displays":
+    [
+      { "type":"init",
+        "script":[
+          {"interval":5},
+          {"cmd": "varSetGeoLocation"},
+          {"cmd": "varSetPreceptionForecast"}
+        ]
+        },
+        { "type":"1",
+            "script":[      
+              
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                {"cmd": "drawLine", "posX": 0, "posY": 101, "posToX": "296", "posToY": 101},
+                {"cmd": "drawLine", "posX": 0, "posY":  70, "posToX": "296", "posToY":  70},
+                {"cmd": "drawLine", "posX": 0, "posY":  50, "posToX": "296", "posToY":  50},
+                {"cmd": "drawLine", "posX": 0, "posY":  30, "posToX": "296", "posToY":  30},
+
+                {"cmd":"for","from":0,"to":23, "step":1, "indexKey":"index","name":"drawBoxes"},
+                {"cmd":"for","from":2,"to":23, "step":6, "indexKey":"index","name":"drawTime"}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[      
+              
+                {"cmd": "drawString", "value": "${location}",   "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                {"cmd": "drawLine", "posX": 0, "posY": 101, "posToX": "296", "posToY": 101},
+                {"cmd": "drawLine", "posX": 0, "posY":  70, "posToX": "296", "posToY":  70},
+                {"cmd": "drawLine", "posX": 0, "posY":  50, "posToX": "296", "posToY":  50},
+                {"cmd": "drawLine", "posX": 0, "posY":  30, "posToX": "296", "posToY":  30},
+
+                {"cmd":"for","from":0,"to":23, "step":1, "indexKey":"index","name":"drawBoxes"},
+                {"cmd":"for","from":2,"to":23, "step":6, "indexKey":"index","name":"drawTime"}
+            ]
+        },
+        
+        { "type":"drawBoxes",
+          "script":[
+            {"cmd": "*", "var1":"${index}", "var2":12, "resultKey":"x"},
+            {"rain":"${PreceptionValue${index}}"},
+            {"cmd":"mathIsEqualOrGreater","var1":"${rain}","var2":25,"resultKey":"color","resultTrue":"${red}","resultFalse":"${black}"},
+            {"cmd": "*", "var1":"${rain}", "var2":2, "resultKey":"rain"},
+            {"cmd": ">", "var1":"${rain}", "var2": 75, "resultKey":"rain", "resultTrue":75, "resultFalse":"${rain}"},
+            {"cmd": "drawBox", "posX":"${x}", "posY": 100, "width": 10, "height": "-${rain}"}
+          ]
+        },
+        
+        { "type":"drawTime",
+          "script":[
+            {"cmd": "*", "var1":"${index}", "var2":12, "resultKey":"x"},
+            {"cmd": "+", "var1":"${x}", "var2":7, "resultKey":"x"},
+            {"cmd": "drawString", "value": "${PreceptionTime${index}}",   "posX": "${x}", "posY": 110, "font":"/fonts/bahnschrift20", "align":"center"}
+          ]
+        },
+
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

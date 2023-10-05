@@ -1,0 +1,56 @@
+{ "ots":1, "displays":
+    [
+        { "type":"init",
+          "script":[
+            {"interval":"3"},
+            {"cmd": "varSetTimeNow", "resultkey":"time"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"day", "value": "%e"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"weekday", "value": "%OA"},
+            {"cmd": "varSetTimeString", "key":"time", "resultkey":"monthname", "value": "%B"}
+          ]
+        },
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+                  {"cmd": "drawString", "value": "AP-Info", "posX": 5, "posY": 5, "font":"/fonts/calibrib30", "color":"${black}"},
+                  {"cmd": "drawString", "value": "IP:", "posX": 5, "posY": 50, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ip}", "posX": 5, "posY": 70, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Channel:", "posX": 5, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ch}", "posX": 90, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Pending:", "posX": 5, "posY": 110, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_pending}", "posX": 90, "posY": 110, "font":"/fonts/bahnschrift20", "color":"${black}"}
+          ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+                  {"cmd": "drawString", "value": "OpenEPaper Link AP", "posX": 5, "posY": 5, "font":"/fonts/calibrib30", "color":"${black}"},
+                  {"cmd": "drawString", "value": "IP:", "posX": 5, "posY": 50, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ip}", "posX": 130, "posY": 50, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Channel:", "posX": 5, "posY": 70, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ch}", "posX": 130, "posY": 70, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Pending:", "posX": 5, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_pending}", "posX": 130, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"}
+            ]
+        },
+
+        { "type":"${TFT320x170}",
+            "script":[
+                  {"cmd": "drawString", "value": "OpenEPaper Link AP", "posX": 5, "posY": 5, "font":"/fonts/calibrib30", "color":"${black}"},
+                  {"cmd": "drawString", "value": "IP:", "posX": 5, "posY": 50, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ip}", "posX": 130, "posY": 50, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Channel:", "posX": 5, "posY": 70, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_ch}", "posX": 130, "posY": 70, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "Pending:", "posX": 5, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"},
+                  {"cmd": "drawString", "value": "${ap_pending}", "posX": 130, "posY": 90, "font":"/fonts/bahnschrift20", "color":"${black}"}
+            ]
+        },
+        
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /ots.json\n script", "posX": 5, "posY": 25, "color":"${black}"},
+            {"cmd": "drawString", "value": "${timestr}", "posX": 5, "posY": 108, "color":"${black}"}
+          ]
+        }
+    ]
+}

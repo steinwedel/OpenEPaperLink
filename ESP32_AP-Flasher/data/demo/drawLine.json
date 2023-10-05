@@ -1,0 +1,35 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+                  {"cmd": "drawString", "value": "Test: drawLine",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawLine", "posX": 20, "posY": 20, "posToX": "120", "posToY": 20},
+                  {"cmd": "drawLine", "posX": 20, "posY": 30, "posToX": "120", "posToY": 30},
+                  {"cmd": "drawLine", "posX": 20, "posY": 40, "posToX": "120", "posToY": 40},
+                  {"cmd": "drawLine", "posX": 20, "posY": 50, "posToX": "120", "posToY": 50},
+                  {"cmd": "drawLine", "posX": 20, "posY": 60, "posToX": "120", "posToY": 60},
+                  {"cmd": "drawLine", "posX": 0, "posY": 0, "posToX": "${displayWidth}", "posToY": "${displayHeight}", "color":"${red}"},
+                  {"cmd": "drawLine", "posX": 0, "posY": "${displayHeight}", "posToX": "${displayWidth}", "posToY": 0, "color":"${red}"}
+          ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+                  {"cmd": "drawString", "value": "Test: drawLine",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+                  {"cmd": "drawLine", "posX": 20, "posY": 20, "posToX": "120", "posToY": 20},
+                  {"cmd": "drawLine", "posX": 20, "posY": 30, "posToX": "120", "posToY": 30},
+                  {"cmd": "drawLine", "posX": 20, "posY": 40, "posToX": "120", "posToY": 40},
+                  {"cmd": "drawLine", "posX": 20, "posY": 50, "posToX": "120", "posToY": 50},
+                  {"cmd": "drawLine", "posX": 20, "posY": 60, "posToX": "120", "posToY": 60},
+                  {"cmd": "drawLine", "posX": 1,  "posY": 1,  "posToX": "${displayWidth}", "posToY": "${displayHeight}", "color":"${red}"},
+                  {"cmd": "drawLine", "posX": 1,  "posY": "${displayHeight}", "posToX": "${displayWidth}", "posToY": 1, "color":"${red}"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /drawLine.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

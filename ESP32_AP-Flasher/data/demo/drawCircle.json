@@ -1,0 +1,44 @@
+{ "ots":1, "displays":
+    [
+        { "type":"${ST_GR1600}",
+          "script":
+          [
+              {"cmd": "drawString", "value": "Test: drawCircle",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawCircle", "posX": 10, "posY": 100, "width": 10},
+              {"cmd": "drawCircle", "posX": 30, "posY": 90, "width": 10, "height": 20},
+              {"cmd": "drawCircle", "posX": 50, "posY": 80, "width": 10, "height": 30},
+              {"cmd": "drawCircle", "posX": 70, "posY": 70, "width": 10, "height": 40},
+              {"cmd": "drawCircle", "posX": 90, "posY": 60, "width": 10, "height": 50},
+              {"cmd": "drawCircle", "posX": 100, "posY": 60, "width": 30, "height": 30, "color":"${red}"}
+            ]
+        },
+        { "type":"${ST_GR2900}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: drawCircle",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawCircle", "posX": 10, "posY": 100, "width": 10},
+              {"cmd": "drawCircle", "posX": 30, "posY": 90, "width": 10, "height": 20},
+              {"cmd": "drawCircle", "posX": 50, "posY": 80, "width": 10, "height": 30},
+              {"cmd": "drawCircle", "posX": 70, "posY": 70, "width": 10, "height": 40},
+              {"cmd": "drawCircle", "posX": 90, "posY": 60, "width": 10, "height": 50},
+              {"cmd": "drawCircle", "posX": 100, "posY": 60, "width": 30, "height": 30, "color":"${red}"}
+            ]
+        },
+        { "type":"${TFT320x170}",
+            "script":[
+              {"cmd": "drawString", "value": "Test: drawCircle",  "posX": 1, "posY": 0,  "font":"/fonts/bahnschrift20", "align":"left", "color":"${black}"},
+              {"cmd": "drawCircle", "posX": 10, "posY": 100, "width": 10},
+              {"cmd": "drawCircle", "posX": 30, "posY": 90, "width": 10, "height": 20},
+              {"cmd": "drawCircle", "posX": 50, "posY": 80, "width": 10, "height": 30},
+              {"cmd": "drawCircle", "posX": 70, "posY": 70, "width": 10, "height": 40},
+              {"cmd": "drawCircle", "posX": 90, "posY": 60, "width": 10, "height": 50},
+              {"cmd": "drawCircle", "posX": 100, "posY": 60, "width": 30, "height": 30, "color":"${red}"}
+            ]
+        },
+        { "type":"errorDisplay",
+          "script":[
+            {"cmd": "drawString", "value": "ERROR!", "posX": 5, "posY": 5, "font":"/fonts/bahnschrift20", "color":"${red}"},
+            {"cmd": "drawString", "value": "No matching\n displayType\n in the /drawBox.json\n script", "posX": 5, "posY": 25, "color":"${black}"}
+          ]
+        }
+    ]
+}

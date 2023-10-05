@@ -36,8 +36,6 @@ build_flags =
 	-D DISABLE_ALL_LIBRARY_WARNINGS
 	-D ILI9341_DRIVER
 	-D SMOOTH_FONT
-	-D OTS
-	;-D OTS_DEBUG
 ; ----------------------------------------------------------------------------------------
 ; !!! this configuration expects the Mini_AP
 ; 
@@ -101,8 +99,7 @@ build_flags =
 	-D FLASHER_AP_MOSI=39
 	-D FLASHER_AP_MISO=33
 	-D FLASHER_AP_RESET=37
-  	;-D FLASHER_AP_POWER={16,17,18,21}
-	-D FLASHER_AP_POWER={-1}
+  	-D FLASHER_AP_POWER={16,17,18,21}
   	-D FLASHER_AP_TXD=35
   	-D FLASHER_AP_RXD=34
   	-D FLASHER_AP_TEST=36
