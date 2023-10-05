@@ -27,13 +27,14 @@
 #include "qrcode.h"
 #endif
 #include "language.h"
+#include "ots/otsDebug.h"
+#include "ots/otsScript.h"
 #include "settings.h"
+#include "system.h"
 #include "tag_db.h"
 #include "truetype.h"
 #include "util.h"
 #include "web.h"
-#include "ots/otsScript.h"
-#include "ots/otsDebug.h"
 
 // https://csvjson.com/json_beautifier
 
@@ -286,8 +287,8 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         case 1:  // Today
 #ifndef OTS
             drawDate(filename, taginfo, imageParams);
-            taginfo->nextupdate = midnight;
-            updateTagImage(filename, mac, (midnight - now) / 60 - 10, taginfo, imageParams);
+            taginfo->nextupdate = util::getMidnightTime();
+            updateTagImage(filename, mac, (taginfo->nextupdate - now) / 60 - 10, taginfo, imageParams);
             break;
 #endif
 #ifdef OTS
@@ -297,7 +298,7 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         case 2:  // CountDays
         {
 #ifndef OTS
-            drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, midnight, 15);
+            drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, util::getMidnightTime(), 15);
             break;
 #endif
 #ifdef OTS
@@ -316,7 +317,7 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
             drawCounter(mac, buttonPressed, taginfo, cfgobj, filename, imageParams, now + 3600, 5);
             break;
 #endif
-#ifdef OTS 
+#ifdef OTS
             int32_t counter = cfgobj["counter"].as<int32_t>();
             if (buttonPressed) counter = 0;
             processTemplateFile("file:///templates/counthours.json", taginfo, imageParams);  // all 60 minutes
@@ -326,10 +327,10 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         }
 
         case 4:  // Weather
-            // https://open-meteo.com/
-            // https://geocoding-api.open-meteo.com/v1/search?name=eindhoven
-            // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true
-            // https://github.com/erikflowers/weather-icons
+                 // https://open-meteo.com/
+                 // https://geocoding-api.open-meteo.com/v1/search?name=eindhoven
+                 // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true
+                 // https://github.com/erikflowers/weather-icons
 
 #ifndef OTS
             drawWeather(filename, cfgobj, taginfo, imageParams);
@@ -481,49 +482,49 @@ void drawNew(const uint8_t mac[8], const bool buttonPressed, tagRecord *&taginfo
         case 19:  // json template
             otsDEBUG("19: Start");
 #ifndef OTS
-        {
-            const String configFilename = cfgobj["filename"].as<String>();
-            if (!util::isEmptyOrNull(configFilename)) {
-                String configUrl = cfgobj["url"].as<String>();
-                if (!util::isEmptyOrNull(configUrl)) {
-                    DynamicJsonDocument json(1000);
-                    Serial.println("Get json url + file");
-                    if (util::httpGetJson(configUrl, json, 1000)) {
-                        if (getJsonTemplateFileExtractVariables(filename, configFilename, json, taginfo, imageParams)) {
+            {
+                const String configFilename = cfgobj["filename"].as<String>();
+                if (!util::isEmptyOrNull(configFilename)) {
+                    String configUrl = cfgobj["url"].as<String>();
+                    if (!util::isEmptyOrNull(configUrl)) {
+                        DynamicJsonDocument json(1000);
+                        Serial.println("Get json url + file");
+                        if (util::httpGetJson(configUrl, json, 1000)) {
+                            if (getJsonTemplateFileExtractVariables(filename, configFilename, json, taginfo, imageParams)) {
+                                updateTagImage(filename, mac, cfgobj["interval"].as<int>(), taginfo, imageParams);
+                            } else {
+                                wsErr("error opening file " + configFilename);
+                            }
+                            const int interval = cfgobj["interval"].as<int>();
+                            taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
+                        } else {
+                            taginfo->nextupdate = now + 600;
+                        }
+
+                    } else {
+                        const bool result = getJsonTemplateFile(filename, configFilename, taginfo, imageParams);
+                        if (result) {
                             updateTagImage(filename, mac, cfgobj["interval"].as<int>(), taginfo, imageParams);
                         } else {
                             wsErr("error opening file " + configFilename);
                         }
-                        const int interval = cfgobj["interval"].as<int>();
+                        taginfo->nextupdate = 3216153600;
+                    }
+                } else {
+                    const int httpcode = getJsonTemplateUrl(filename, cfgobj["url"], (time_t)cfgobj["#fetched"], String(hexmac), taginfo, imageParams);
+                    const int interval = cfgobj["interval"].as<int>();
+                    if (httpcode == 200) {
+                        taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
+                        updateTagImage(filename, mac, interval, taginfo, imageParams);
+                        cfgobj["#fetched"] = now;
+                    } else if (httpcode == 304) {
                         taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
                     } else {
                         taginfo->nextupdate = now + 600;
                     }
-
-                } else {
-                    const bool result = getJsonTemplateFile(filename, configFilename, taginfo, imageParams);
-                    if (result) {
-                        updateTagImage(filename, mac, cfgobj["interval"].as<int>(), taginfo, imageParams);
-                    } else {
-                        wsErr("error opening file " + configFilename);
-                    }
-                    taginfo->nextupdate = 3216153600;
                 }
-            } else {
-                const int httpcode = getJsonTemplateUrl(filename, cfgobj["url"], (time_t)cfgobj["#fetched"], String(hexmac), taginfo, imageParams);
-                const int interval = cfgobj["interval"].as<int>();
-                if (httpcode == 200) {
-                    taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
-                    updateTagImage(filename, mac, interval, taginfo, imageParams);
-                    cfgobj["#fetched"] = now;
-                } else if (httpcode == 304) {
-                    taginfo->nextupdate = now + 60 * (interval < 3 ? 15 : interval);
-                } else {
-                    taginfo->nextupdate = now + 600;
-                }
+                break;
             }
-            break;
-        }
 #endif
 #ifdef OTS
             processTemplate(cfgobj["url"].as<String>(), taginfo, imageParams);
@@ -581,11 +582,19 @@ void replaceVariables(String &format) {
     size_t startIndex = 0;
     size_t openBraceIndex, closeBraceIndex;
 
+    time_t now;
+    time(&now);
+    struct tm timedef;
+    localtime_r(&now, &timedef);
+    char timeBuffer[80];
+    strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &timedef);
+    setVarDB("ap_time", timeBuffer, false);
+
     while ((openBraceIndex = format.indexOf('{', startIndex)) != -1 &&
            (closeBraceIndex = format.indexOf('}', openBraceIndex + 1)) != -1) {
         const std::string variableName = format.substring(openBraceIndex + 1, closeBraceIndex).c_str();
         const std::string varKey = "{" + variableName + "}";
-        auto var = varDB.find(variableName);
+        const auto var = varDB.find(variableName);
         if (var != varDB.end()) {
             format.replace(varKey.c_str(), var->second.value);
         }
@@ -947,6 +956,7 @@ int getImgURL(String &filename, String URL, time_t fetched, imgParam &imageParam
     Storage.begin();
 
     HTTPClient http;
+    logLine("http getImgURL " + URL);
     http.begin(URL);
     http.addHeader("If-Modified-Since", formatHttpDate(fetched));
     http.addHeader("X-ESL-MAC", MAC);
@@ -1054,6 +1064,7 @@ bool getCalFeed(String &filename, String URL, String title, tagRecord *&taginfo,
     strftime(dateString, sizeof(dateString), "%d.%m.%Y", &timeinfo);
 
     HTTPClient http;
+    logLine("http getCalFeed " + URL);
     http.begin(URL);
     http.setTimeout(10000);
     http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
@@ -1156,6 +1167,7 @@ uint8_t drawBuienradar(String &filename, JsonObject &cfgobj, tagRecord *&taginfo
 
     String lat = cfgobj["#lat"];
     String lon = cfgobj["#lon"];
+    logLine("http drawBuienradar");
     http.begin("https://gps.buienradar.nl/getrr.php?lat=" + lat + "&lon=" + lon);
     http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
     http.setTimeout(5000);
@@ -1419,6 +1431,7 @@ bool getJsonTemplateFileExtractVariables(String &filename, String jsonfile, Json
 int getJsonTemplateUrl(String &filename, String URL, time_t fetched, String MAC, tagRecord *&taginfo, imgParam &imageParams) {
     HTTPClient http;
     http.useHTTP10(true);
+    logLine("http getJsonTemplateUrl " + URL);
     http.begin(URL);
     http.addHeader("If-Modified-Since", formatHttpDate(fetched));
     http.addHeader("X-ESL-MAC", MAC);
